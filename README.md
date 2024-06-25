@@ -191,3 +191,11 @@ Dans le cas où toutes les demandes fonctionnelles seraient remplies (et, j'insi
 - Sur l'écran qui liste les cours, la moyenne de chaque promotion par cours
 
 Une saisie en mode console un peu plus "interactive" pourra être proposée. Vous êtes libres de la réaliser comme vous le souhaitez.
+
+
+
+
+## Get started
+```shell script
+dotnet add package Newtonsoft.Json
+```
