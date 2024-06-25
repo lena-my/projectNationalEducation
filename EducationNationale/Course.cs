@@ -15,7 +15,7 @@ namespace EducationNationale
 
         public Course(string name, int id = 0)
         {
-            this.id = id;
+            this.id = IdGenerator();
             this.name = name;
         }
 
@@ -25,20 +25,35 @@ namespace EducationNationale
         // method to generate unique id
         public int IdGenerator()
         {
-            //TODO
-            return 0;
+            // defines the path to data.json
+            string filePath = "./bin/Debug/net8.0/data.json";
+
+            // check if the file exists
+            if (!File.Exists(filePath))
+            {
+                Console.WriteLine("JSON file not found!");
+            }
+
+            // Read JSON file
+            string json = File.ReadAllText(filePath);
+
+            // Parse JSON using JObject
+            JObject jsonData = JObject.Parse(json);
+
+            // Extract list of "courses"
+            JArray courseList = (JArray)jsonData["courses"];
+
+            int lastId = (int)courseList.Last["id"];
+            id = lastId + 1;
+
+            return id;
         }
 
         // method to create a new course
-        public void CreateCourse()
+        public void CreateCourse(Course course)
         {
-            Console.WriteLine("Enter the name of a couse:");
-            string courseString = Console.ReadLine();
-            Course course = new Course(courseString); // creates a new course
-
             // defines the path to data.json
-            string directoryPath = "./bin/Debug/net8.0/";
-            string filePath = Path.Combine(directoryPath, "data.json");
+            string filePath = "./bin/Debug/net8.0/data.json";
 
             // check if the file exists
             if (!File.Exists(filePath))
@@ -54,6 +69,11 @@ namespace EducationNationale
 
             // Extract list of "courses"
             JArray coursesList = (JArray)jsonData["courses"];
+
+            //string jsonString = JsonConvert.SerializeObject(course, Formatting.Indented);
+
+            // Write in json file
+            //File.WriteAllText(filePath, jsonString);
 
             // Create new course to the list
             var newCourse = new
@@ -79,16 +99,21 @@ namespace EducationNationale
             {
                 Console.WriteLine($"Failed to add ${course.GetName} to data.json: {e.Message}");
             }
-
         }
 
-        // method to display all courses
+        /*public void ReadAllCourses ()
+        {
+            string filePath = "./bin/Debug/net8.0/data.json";
+            string json = File.ReadAllText(filePath);
 
+
+        }*/
+
+        // method to display all courses
         public void DisplayAllCourses()
         {
             // defines the path to data.json
-            string directoryPath = "./bin/Debug/net8.0/";
-            string filePath = Path.Combine(directoryPath, "data.json");
+            string filePath = "./bin/Debug/net8.0/data.json";
 
             // check if the file exists
             if (!File.Exists(filePath))
@@ -117,11 +142,10 @@ namespace EducationNationale
         }
 
         // Get Course By Id
-        public string FindCourseById()
+        public Course FindCourseById(int id)
         {
             // defines the path to data.json
-            string directoryPath = "./bin/Debug/net8.0/";
-            string filePath = Path.Combine(directoryPath, "data.json");
+            string filePath = "./bin/Debug/net8.0/data.json";
 
             // check if the file exists
             if (!File.Exists(filePath))
@@ -137,22 +161,71 @@ namespace EducationNationale
 
             // Extract list of "courses"
             JArray courseList = (JArray)jsonData["courses"];
-            List<Course> courses = new List<Course>();
 
-            // Enter the id of the course to exclude
-            Console.WriteLine("Display a course by id:");
-            int.TryParse(Console.ReadLine(), out int id);
+            // Find the course with the specified id
+            foreach (JObject courseObj in courseList)
+            {
+                if ((int)courseObj["id"] == id)
+                {
+                    // Deserialize the JObject to Course
+                    Course course = courseObj.ToObject<Course>();
+                    return course;
+                }
+            }
 
-            Course course = courses.FirstOrDefault(c => c.GetId() == id);
-            return course.GetName();
+            return null; // Course not found
         }
 
         // Delete course by Id
-        public void DeleteCourse()
+        public void DeleteCourse(int id)
         {
-            Console.WriteLine("Enter the id of the course to remove:");
-            int.TryParse(Console.ReadLine(), out int id);
+            // defines the path to data.json
+            string filePath = "./bin/Debug/net8.0/data.json";
 
+            // check if the file exists
+            if (!File.Exists(filePath))
+            {
+                Console.WriteLine("JSON file not found!");
+            }
+
+            // Read JSON file
+            string json = File.ReadAllText(filePath);
+
+            // Parse JSON using JObject
+            JObject jsonData = JObject.Parse(json);
+
+            // Extract list of "courses"
+            JArray courseList = (JArray)jsonData["courses"];
+
+            JObject courseToRemove = null;
+
+            // loop into array courseList to find the object to remove
+            foreach (JObject courseObject in courseList)
+            {
+                if ((int)courseObject["id"] == id)
+                {
+                    courseToRemove = courseObject;
+                    break;
+                }
+            }
+
+            if (courseToRemove != null)
+            {
+                // remove the courseToRemove from courseList
+                courseList.Remove(courseToRemove);
+
+                // Convert updated JSON back to string
+                string updatedJson = JsonConvert.SerializeObject(jsonData, Formatting.Indented);
+
+                // Write the updated JSON back to the file
+                File.WriteAllText(filePath, updatedJson);
+
+                Console.WriteLine($"The course with id {id} was deleted successfully.");
+            }
+            else
+            {
+                Console.WriteLine($"Course with id {id} not found.");
+            }
         }
 
 
