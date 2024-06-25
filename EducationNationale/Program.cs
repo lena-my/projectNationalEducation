@@ -133,10 +133,11 @@ public class Program
                     
                     Console.WriteLine("MENU COURSE");
                     Console.WriteLine("Choose an option:");
-                    Console.WriteLine("0 - Back to the principal menu");
+                    Console.WriteLine("0 - Back to the main menu");
                     Console.WriteLine("1 - List of courses");
-                    Console.WriteLine("2 - Add a new course");
-                    Console.WriteLine("3 - Exclude a course by id");
+                    Console.WriteLine("2 - Find course by id");
+                    Console.WriteLine("3 - Add a new course");
+                    Console.WriteLine("4 - Exclude a course by id");
 
                     int.TryParse(Console.ReadLine(), out menuChoice);
 
@@ -163,15 +164,40 @@ public class Program
                         }
                     }
 
-                    // Add new course
+                    // Find course by id
                     else if (menuChoice == 2)
                     {
+                        Console.WriteLine("----------------------------------------------------------------------");
+                        Console.WriteLine("Find course by id");
+                        Console.WriteLine("Enter the id of the course to find:");
+                        int.TryParse(Console.ReadLine(), out int id); // output id to find
+
+                        // calls the method FindCourseById
+                        Course courseToFind = serviceCourse.FindCourseById(id);
+                        Console.WriteLine($"Code course : {courseToFind.GetId()}    Course : {courseToFind.GetName()}\n");
+
+                        // menu
+                        Console.WriteLine("Press 0 to go back to main menu");
+                        int.TryParse(Console.ReadLine(), out menuChoice); // output menuChoice
+
+                        if (menuChoice == 0)
+                        {
+                            break;
+                        }
+                    }
+
+                    // Add new course
+                    else if (menuChoice == 3)
+                    {
                         Console.WriteLine("Add new course");
+                        Console.WriteLine("Enter the name of a course:");
+                        string courseString = Console.ReadLine();
+                        Course course = new Course(courseString); // creates a new course
 
                         // calls the method createCourse
-                        serviceCourse.CreateCourse();
+                        serviceCourse.CreateCourse(course);
 
-                        Console.WriteLine("0 - Back to main menu");
+                        Console.WriteLine("\n0 - Back to main menu");
 
                         int.TryParse(Console.ReadLine(), out menuChoice); // output menuChoice
 
@@ -182,13 +208,18 @@ public class Program
                     }
 
                     // Exclude a course by id
-                    else if (menuChoice == 3)
+                    else if (menuChoice == 4)
                     {
                         Console.WriteLine("Exclude a course by id");
-                        Console.WriteLine("0 - Back to main menu");
+
+                        Console.WriteLine("Enter the id of the course to remove:");
+                        int.TryParse(Console.ReadLine(), out int id); // Enter the id of the course to exclude
+                        serviceCourse.DeleteCourse(id);
+
+                        Console.WriteLine("\n0 - Back to main menu");
                         int.TryParse(Console.ReadLine(), out menuChoice);
 
-                        serviceCourse.FindCourseById();
+                        serviceCourse.FindCourseById(id);
 
                         if (menuChoice == 0)
                         {
