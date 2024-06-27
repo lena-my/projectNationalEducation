@@ -1,124 +1,104 @@
 ﻿using System.Net.Mail;
 using EducationNationale;
+using EducationNationale.Business;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
-
-/* Course mathematics = new Course("Mathematics");
-Console.WriteLine(mathematics.GetIdCourse() + " " + mathematics.GetName());
-mathematics.CreateCourse();
-
-Course history = new Course("History");
-Console.WriteLine(history.GetIdCourse() + " " + history.GetName());
-history.CreateCourse(); */
-
 
 public class Program
 {
     public static void Main()
     {
-        Campus serviceCampus = new Campus();
-        Student serviceStudent = new Student();
-        Course serviceCourse = new Course();
+        DataApp? dataApp = FileHandler.Deserialize();
+        if(dataApp is null){
+            dataApp = new DataApp(new List<Course> (){}, new List<Student> (){});
+        }
+        dataApp.Students.AddRange(new List<Student>{
+            new Student(1,"toto","BOBO",new DateTime(2010,10,10)),
+            new Student(2,"Helena","LaMeilleure",new DateTime(2000,10,10)),
+        });
 
-        List<Course> courses = new List<Course> {
-            new Course ("Maths"), 
-            new Course ("Geography"),
-            new Course ("Phylosophie")
-        };
+        dataApp.Courses.AddRange(new List<Course>{
+            new Course("Math",1),
+            new Course("Hist",2)
+        });
+
+        ServiceStudent serviceStudent = new ServiceStudent(dataApp.Students);
+        ServiceCourse serviceCourse = new ServiceCourse(dataApp.Courses);
+
+        App app = new App(serviceStudent, serviceCourse );
+
+        app.DisplayStudents();
+
+        UserInterface userInterface = new UserInterface();
+
+        FileHandler.Serialize(dataApp);
+
+    
+        serviceCourse.CreateCourse(course);
+
+        //serviceCourse.GetAllCourses();
 
 
-        Console.Clear();
+
+        // serviceCampus.Courses = courses;
+        // serviceCampus.Students = students;
+
+        // serviceCourse.CreateCourse();
+
+
+
         while (true)
         {
             int menuChoice;
-
-            Console.WriteLine("MAIN MENU");
-            Console.WriteLine("Choose an option:");
-            Console.WriteLine("1 - Student");
-            Console.WriteLine("2 - Course");
-            int.TryParse(Console.ReadLine(), out menuChoice);
+            userInterface.DisplayMainMenu();
+            menuChoice = userInterface.ChooseMenu();
 
             // Menu student
             if (menuChoice == 1)
             {
                 while (true)
                 {
-                    //Console.Clear();
-                    Console.WriteLine("MENU STUDENT");
-                    Console.WriteLine("Choose an option:");
-                    Console.WriteLine("0 - Back to the main menu");
-                    Console.WriteLine("1 - List of students");
-                    Console.WriteLine("2 - Add a new student");
-                    Console.WriteLine("3 - Find a student");
-                    Console.WriteLine("4 - Add a grade and an assessment to a student");
-
-                    int.TryParse(Console.ReadLine(), out menuChoice);
-
-                    // Back to main menu
-                    if (menuChoice == 0)
-                    {
-                        break;
-                    }
+                    userInterface.DisplayMenuStudents();
+                    menuChoice = userInterface.ChooseMenu(); 
+                    if (menuChoice == 0) break; // Back to main menu
 
                     // List of students
                     else if (menuChoice == 1)
                     {
-                        //Console.Clear();
-                        Console.WriteLine("List of students");
-
-                        serviceStudent.DisplayStudents();
-
-                        Console.WriteLine("Press 0 to go back to main menu");
-                        int.TryParse(Console.ReadLine(), out menuChoice); // create int menuChoice
-                        if (menuChoice == 0)
-                        {
-                            break;
-                        }
+                        userInterface.DisplayStudents();
+                        menuChoice = userInterface.DisplayBackToMainMenu();
+                        if (menuChoice == 0) break;
                     }
 
                     // Add new student
                     else if (menuChoice == 2)
                     {
-                        //Console.Clear();
-                        Console.WriteLine("Add new student");
-                        Console.WriteLine("0 - Back to main menu");
-                        int.TryParse(Console.ReadLine(), out menuChoice);
-                        if (menuChoice == 0)
-                        {
-                            break;
-                        }
+                        // Create New Student method
+                        menuChoice = userInterface.DisplayBackToMainMenu();
+                        if (menuChoice == 0) break;
                     }
 
                     // Find a student
                     else if (menuChoice == 3)
                     {
-                        //Console.Clear();
                         Console.WriteLine("Find a student");
-                        Console.WriteLine("0 - Back to main menu");
-                        int.TryParse(Console.ReadLine(), out menuChoice);
-                        if (menuChoice == 0)
-                        {
-                            break;
-                        }
+
+                        menuChoice = userInterface.DisplayBackToMainMenu();
+                        if (menuChoice == 0) break;
                     }
 
                     // Add a grade and an assessment to a student
                     else if (menuChoice == 4)
                     {
-                        //Console.Clear();
                         Console.WriteLine("Add a grade and an assessment to a student");
-                        Console.WriteLine("0 - Back to main menu");
-                        int.TryParse(Console.ReadLine(), out menuChoice);
-                        if (menuChoice == 0)
-                        {
-                            continue;
-                        }
+                        
+                        menuChoice = userInterface.DisplayBackToMainMenu();
+                        if (menuChoice == 0) break;
                     }
 
                     // Other cases
                     else
                     {
-                        //Console.Clear();
                         Console.WriteLine("Invalid entry. Try again.");
                         continue;
                     }
@@ -130,38 +110,19 @@ public class Program
             {
                 while (true)
                 {
-                    
-                    Console.WriteLine("MENU COURSE");
-                    Console.WriteLine("Choose an option:");
-                    Console.WriteLine("0 - Back to the main menu");
-                    Console.WriteLine("1 - List of courses");
-                    Console.WriteLine("2 - Find course by id");
-                    Console.WriteLine("3 - Add a new course");
-                    Console.WriteLine("4 - Exclude a course by id");
+                    userInterface.DisplayCourseMenu();
+                    menuChoice = userInterface.ChooseMenu();
 
-                    int.TryParse(Console.ReadLine(), out menuChoice);
-
-                    // Back to main menu
-                    if (menuChoice == 0)
-                    {
-                        break;
-                    }
+                    if (menuChoice == 0) break;
 
                     // List of courses
                     else if (menuChoice == 1)
                     {
                         Console.WriteLine("----------------------------------------------------------------------");
-                        Console.WriteLine("List of courses");
-                        
-                        // calls the method DisplayALlCourses to display a list of the courses
-                        serviceCourse.DisplayAllCourses();
+                        Console.WriteLine("\nList of courses");
 
-                        Console.WriteLine("Press 0 to go back to main menu");
-                        int.TryParse(Console.ReadLine(), out menuChoice); // output menuChoice
-                        if (menuChoice == 0)
-                        {
-                            break;
-                        }
+                        menuChoice = userInterface.DisplayBackToMainMenu();
+                        if (menuChoice == 0) break;
                     }
 
                     // Find course by id
@@ -174,16 +135,10 @@ public class Program
 
                         // calls the method FindCourseById
                         Course courseToFind = serviceCourse.FindCourseById(id);
-                        Console.WriteLine($"Code course : {courseToFind.GetId()}    Course : {courseToFind.GetName()}\n");
+                        Console.WriteLine($"Code course : {courseToFind.Id}    Course : {courseToFind.Name}\n");
 
-                        // menu
-                        Console.WriteLine("Press 0 to go back to main menu");
-                        int.TryParse(Console.ReadLine(), out menuChoice); // output menuChoice
-
-                        if (menuChoice == 0)
-                        {
-                            break;
-                        }
+                        menuChoice = userInterface.DisplayBackToMainMenu();
+                        if (menuChoice == 0) break;
                     }
 
                     // Add new course
@@ -192,19 +147,13 @@ public class Program
                         Console.WriteLine("Add new course");
                         Console.WriteLine("Enter the name of a course:");
                         string courseString = Console.ReadLine();
-                        Course course = new Course(courseString); // creates a new course
+                        Course course = new Course(courseString, 5); // creates a new course
 
                         // calls the method createCourse
                         serviceCourse.CreateCourse(course);
 
-                        Console.WriteLine("\n0 - Back to main menu");
-
-                        int.TryParse(Console.ReadLine(), out menuChoice); // output menuChoice
-
-                        if (menuChoice == 0)
-                        {
-                            break;
-                        }
+                        menuChoice = userInterface.DisplayBackToMainMenu();
+                        if (menuChoice == 0) break;
                     }
 
                     // Exclude a course by id
@@ -215,30 +164,24 @@ public class Program
                         Console.WriteLine("Enter the id of the course to remove:");
                         int.TryParse(Console.ReadLine(), out int id); // Enter the id of the course to exclude
                         serviceCourse.DeleteCourse(id);
-
-                        Console.WriteLine("\n0 - Back to main menu");
-                        int.TryParse(Console.ReadLine(), out menuChoice);
-
                         serviceCourse.FindCourseById(id);
 
-                        if (menuChoice == 0)
-                        {
-                            break;
-                        }
+                        menuChoice = userInterface.DisplayBackToMainMenu();
+                        if (menuChoice == 0) break;
                     }
-                    else {
-                        Console.WriteLine("Invalid number. Try again");
+                    else
+                    {
+                        Console.WriteLine("Invalid number. Try again.");
                     }
                 }
 
             }
             else
             {
-                Console.WriteLine("Invalid number. Try again");
+                Console.WriteLine("Invalid number. Try again.");
             }
-
         }
-    }
+     }
 }
 
 
