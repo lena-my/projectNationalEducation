@@ -7,9 +7,9 @@ namespace EducationNationale
 {
     public class UserInterface
     {
-        private App _app;
+        private ServiceApp _app;
 
-        public UserInterface(App app)
+        public UserInterface(ServiceApp app)
         {
             _app = app;
         }

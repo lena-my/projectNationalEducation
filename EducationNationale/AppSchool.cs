@@ -1,7 +1,3 @@
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
 using EducationNationale.Business;
 using EducationNationale.View;
 
@@ -9,20 +5,15 @@ namespace EducationNationale
 {
     public class AppSchool
     {
+        private readonly ServiceApp _serviceApp;
+        public AppSchool(ServiceApp serviceApp){
+            _serviceApp = serviceApp;
+        }
         public void RunProgram()
         {
-            DataApp? dataApp = FileHandler.Deserialize(); // Converts the data.json to
-            if (dataApp is null)
-            {
-                dataApp = new DataApp(new List<Course>() { }, new List<Student>() { });
-            }
 
-            ServiceStudent serviceStudent = new ServiceStudent(dataApp.Students);
-            ServiceCourse serviceCourse = new ServiceCourse(dataApp.Courses);
             UserInterface userInterface = new UserInterface();
             UserEntry userEntry = new UserEntry();
-            App app = new App(serviceStudent, serviceCourse);
-
             Console.Clear();
 
             while (true)
@@ -32,56 +23,43 @@ namespace EducationNationale
                 menuChoice = userEntry.GetMenuChoice();
 
                 // Menu student
-                
+                if (menuChoice == 1)
                 {
                     while (true)
                     {
                         userInterface.DisplayMenuStudents();
                         menuChoice = userEntry.GetMenuChoice();
-                        if (menuChoice == 0) break; // Back to main menu
 
+                        // Back to main menu
+                        if (menuChoice == 0) break; 
                         // List of students
                         else if (menuChoice == 1)
                         {
                             userInterface.DisplayStudents();
-                            app.DisplayStudents();
-                            menuChoice = userEntry.GetBackToMainMenu();
-                            
-                            if (menuChoice == 0) break;
+                            _serviceApp.DisplayStudents();
                         }
-
                         // Add new student
                         else if (menuChoice == 2)
                         {
                             // Create New Student method
-                            menuChoice = userEntry.GetBackToMainMenu();
-                            if (menuChoice == 0) break;
                         }
-
                         // Find a student
                         else if (menuChoice == 3)
                         {
                             Console.WriteLine("Find a student");
-
-                            menuChoice = userEntry.GetBackToMainMenu();
-                            if (menuChoice == 0) break;
                         }
-
                         // Add a grade and an assessment to a student
                         else if (menuChoice == 4)
                         {
                             Console.WriteLine("Add a grade and an assessment to a student");
-
-                            menuChoice = userEntry.GetBackToMainMenu();
-                            if (menuChoice == 0) break;
                         }
-
                         // Other cases
                         else
                         {
                             userInterface.DisplayInvalidNumber();
-                            continue;
                         }
+
+                        //Quand tu sors du If/Else If on recommence la boucle While
                     }
                 }
 
@@ -100,7 +78,7 @@ namespace EducationNationale
                         {
                             Console.WriteLine("----------------------------------------------------------------------");
                             Console.WriteLine("\nLIST OF COURSES \n");
-                            serviceCourse.DisplayAllCourses();
+                            _serviceApp.DisplayAllCourses();
 
 
 
@@ -114,7 +92,7 @@ namespace EducationNationale
                         {
                             userInterface.DisplayGetCourseById();
                             int id = userEntry.GetEnteredId();
-                            Course courseToFind = serviceCourse.FindCourseById(id); // calls the method FindCourseById
+                            Course courseToFind = _serviceApp.FindCourseById(id); // calls the method FindCourseById
                             Console.WriteLine($"Code course : {courseToFind.Id}    Course : {courseToFind.Name}\n");
 
                             menuChoice = userEntry.GetBackToMainMenu();
@@ -124,11 +102,10 @@ namespace EducationNationale
                         // Create new course
                         else if (menuChoice == 3)
                         {
-                            Course newCourse = app.GetCourseToCreate();
-                            serviceCourse.CreateCourse(newCourse);
+                            Course newCourse = _serviceApp.GetCourseToCreate();
+                            _serviceApp.CreateCourse(newCourse);
 
-                            menuChoice = userEntry.GetBackToMainMenu();
-                            if (menuChoice == 0) break;
+                            if (userEntry.GetBackToMainMenu() == 0) break;
                         }
 
                         // Exclude a course by id
@@ -136,7 +113,7 @@ namespace EducationNationale
                         {
                             userInterface.DisplayRemoveCourseById();
                             int id = userEntry.GetEnteredId();
-                            serviceCourse.DeleteCourse(id);
+                            _serviceApp.DeleteCourse(id);
 
                             menuChoice = userEntry.GetBackToMainMenu();
                             if (menuChoice == 0) break;
@@ -152,7 +129,6 @@ namespace EducationNationale
                     userInterface.DisplayInvalidNumber();
                 }
 
-                FileHandler.Serialize(dataApp);
             }
         }
     }

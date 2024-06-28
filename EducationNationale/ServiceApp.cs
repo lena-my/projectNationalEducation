@@ -1,31 +1,30 @@
-using System;
-using System.Collections.Generic;
 using System.Globalization;
-using System.Linq;
-using System.Threading.Tasks;
 using EducationNationale.Business;
 
 namespace EducationNationale
 {
-    public class App
+    public class ServiceApp
     {
         public readonly ServiceStudent ServiceStudent;
         public readonly ServiceCourse ServiceCourse;
         
-        public App(ServiceStudent serviceStudent,ServiceCourse serviceCourse){
+        public ServiceApp(ServiceStudent serviceStudent,ServiceCourse serviceCourse){
             ServiceCourse = serviceCourse;
             ServiceStudent = serviceStudent;
         }
 
         public int IdGeneratorCourse()
         {
-            int id = ServiceCourse.Courses.Max(x=> x.Id) + 1;
-            return id;
+            return ServiceCourse.Courses.Max(x=> x.Id) + 1;
         }
         public int IdGeneratorStudent()
         {
-            int id = ServiceStudent.Students.Max(x=> x.Id) + 1;
-            return id;
+            return ServiceStudent.Students.Max(x=> x.Id) + 1;
+        }
+
+        public bool Save(){
+
+            return FileHandler.Serialize(new DataApp(ServiceCourse.Courses,ServiceStudent.Students));
         }
         public void DisplayStudents(){
             Console.WriteLine("List of students");
@@ -64,6 +63,25 @@ namespace EducationNationale
             }
 
             return new Course(IdGeneratorCourse(),courseString);
+        }
+
+        public void DisplayAllCourses(){
+            ServiceCourse.DisplayAllCourses();
+        }
+
+        public void CreateCourse(Course course)
+        {
+            ServiceCourse.CreateCourse(course);
+            Save();
+        }
+
+        public Course FindCourseById(int Id){
+            return ServiceCourse.FindCourseById(Id);
+        }
+
+        public void DeleteCourse(int Id){
+            ServiceCourse.DeleteCourse(Id);
+            Save();
         }
     }
 }
