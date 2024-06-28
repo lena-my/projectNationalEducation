@@ -9,9 +9,7 @@ namespace EducationNationale
 {
     public class App
     {
-        
         public readonly ServiceStudent ServiceStudent;
-
         public readonly ServiceCourse ServiceCourse;
         
         public App(ServiceStudent serviceStudent,ServiceCourse serviceCourse){
@@ -21,8 +19,8 @@ namespace EducationNationale
 
         public int IdGenerator()
         {
-            //TODO
-            return 0;
+            int id = ServiceCourse.Courses[^1].Id + 1;
+            return id;
         }
         
         public void DisplayStudents(){
