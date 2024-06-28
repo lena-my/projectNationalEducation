@@ -21,8 +21,6 @@ namespace EducationNationale
         // empty constructor
         public DataApp () {
         }
-        
-
     }
 
 }

@@ -1,6 +1,7 @@
 ﻿using System.Net.Mail;
 using EducationNationale;
 using EducationNationale.Business;
+using EducationNationale.View;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
 
@@ -8,50 +9,43 @@ public class Program
 {
     public static void Main()
     {
-        DataApp? dataApp = FileHandler.Deserialize();
+        DataApp? dataApp = FileHandler.Deserialize(); // Converts the data.json to
         if(dataApp is null){
             dataApp = new DataApp(new List<Course> (){}, new List<Student> (){});
         }
-        dataApp.Students.AddRange(new List<Student>{
-            new Student(1,"toto","BOBO",new DateTime(2010,10,10)),
-            new Student(2,"Helena","LaMeilleure",new DateTime(2000,10,10)),
-        });
+        // dataApp.Students.AddRange(new List<Student>{
+        //     new Student(1,"","BOBO",new DateTime(2010,10,10)),
+        //     new Student(2,"Helena","Miura",new DateTime(2000,10,10)),
+        // });
 
-        dataApp.Courses.AddRange(new List<Course>{
-            new Course("Math",1),
-            new Course("Hist",2)
-        });
+        // dataApp.Courses.AddRange(new List<Course>{
+        //     new Course("Math",1),
+        //     new Course("Hist",2)
+        // });
 
         ServiceStudent serviceStudent = new ServiceStudent(dataApp.Students);
         ServiceCourse serviceCourse = new ServiceCourse(dataApp.Courses);
 
         App app = new App(serviceStudent, serviceCourse );
 
-        app.DisplayStudents();
-
         UserInterface userInterface = new UserInterface();
+        UserEntry userEntry = new UserEntry();
 
-        FileHandler.Serialize(dataApp);
 
-    
-        serviceCourse.CreateCourse(course);
 
         //serviceCourse.GetAllCourses();
-
-
-
         // serviceCampus.Courses = courses;
         // serviceCampus.Students = students;
 
         // serviceCourse.CreateCourse();
 
-
+        Console.Clear();
 
         while (true)
         {
             int menuChoice;
             userInterface.DisplayMainMenu();
-            menuChoice = userInterface.ChooseMenu();
+            menuChoice = userEntry.GetMenuChoice();
 
             // Menu student
             if (menuChoice == 1)
@@ -59,14 +53,15 @@ public class Program
                 while (true)
                 {
                     userInterface.DisplayMenuStudents();
-                    menuChoice = userInterface.ChooseMenu(); 
+                    menuChoice = userEntry.GetMenuChoice(); 
                     if (menuChoice == 0) break; // Back to main menu
 
                     // List of students
                     else if (menuChoice == 1)
                     {
                         userInterface.DisplayStudents();
-                        menuChoice = userInterface.DisplayBackToMainMenu();
+                        app.DisplayStudents();
+                        menuChoice = userEntry.GetBackToMainMenu();
                         if (menuChoice == 0) break;
                     }
 
@@ -74,7 +69,7 @@ public class Program
                     else if (menuChoice == 2)
                     {
                         // Create New Student method
-                        menuChoice = userInterface.DisplayBackToMainMenu();
+                        menuChoice = userEntry.GetBackToMainMenu();
                         if (menuChoice == 0) break;
                     }
 
@@ -83,7 +78,7 @@ public class Program
                     {
                         Console.WriteLine("Find a student");
 
-                        menuChoice = userInterface.DisplayBackToMainMenu();
+                        menuChoice = userEntry.GetBackToMainMenu();
                         if (menuChoice == 0) break;
                     }
 
@@ -92,14 +87,14 @@ public class Program
                     {
                         Console.WriteLine("Add a grade and an assessment to a student");
                         
-                        menuChoice = userInterface.DisplayBackToMainMenu();
+                        menuChoice = userEntry.GetBackToMainMenu();
                         if (menuChoice == 0) break;
                     }
 
                     // Other cases
                     else
                     {
-                        Console.WriteLine("Invalid entry. Try again.");
+                        userInterface.DisplayInvalidNumber();
                         continue;
                     }
                 }
@@ -111,7 +106,7 @@ public class Program
                 while (true)
                 {
                     userInterface.DisplayCourseMenu();
-                    menuChoice = userInterface.ChooseMenu();
+                    menuChoice = userEntry.GetMenuChoice();
 
                     if (menuChoice == 0) break;
 
@@ -119,67 +114,60 @@ public class Program
                     else if (menuChoice == 1)
                     {
                         Console.WriteLine("----------------------------------------------------------------------");
-                        Console.WriteLine("\nList of courses");
+                        Console.WriteLine("\nLIST OF COURSES \n");
+                        serviceCourse.DisplayAllCourses();
+                        
+                        
 
-                        menuChoice = userInterface.DisplayBackToMainMenu();
+                        userInterface.DisplayBackToMainMenu();
+                        menuChoice = userEntry.GetBackToMainMenu();
                         if (menuChoice == 0) break;
                     }
 
                     // Find course by id
                     else if (menuChoice == 2)
                     {
-                        Console.WriteLine("----------------------------------------------------------------------");
-                        Console.WriteLine("Find course by id");
-                        Console.WriteLine("Enter the id of the course to find:");
-                        int.TryParse(Console.ReadLine(), out int id); // output id to find
-
-                        // calls the method FindCourseById
-                        Course courseToFind = serviceCourse.FindCourseById(id);
+                        userInterface.DisplayGetCourseById();
+                        int id = userEntry.GetEnteredId();
+                        Course courseToFind = serviceCourse.FindCourseById(id); // calls the method FindCourseById
                         Console.WriteLine($"Code course : {courseToFind.Id}    Course : {courseToFind.Name}\n");
 
-                        menuChoice = userInterface.DisplayBackToMainMenu();
+                        menuChoice = userEntry.GetBackToMainMenu();
                         if (menuChoice == 0) break;
                     }
 
-                    // Add new course
+                    // Create new course
                     else if (menuChoice == 3)
                     {
-                        Console.WriteLine("Add new course");
-                        Console.WriteLine("Enter the name of a course:");
-                        string courseString = Console.ReadLine();
-                        Course course = new Course(courseString, 5); // creates a new course
+                        Course newCourse = app.GetCourseToCreate();
+                        serviceCourse.CreateCourse(newCourse);
 
-                        // calls the method createCourse
-                        serviceCourse.CreateCourse(course);
-
-                        menuChoice = userInterface.DisplayBackToMainMenu();
+                        menuChoice = userEntry.GetBackToMainMenu();
                         if (menuChoice == 0) break;
                     }
 
                     // Exclude a course by id
                     else if (menuChoice == 4)
                     {
-                        Console.WriteLine("Exclude a course by id");
-
-                        Console.WriteLine("Enter the id of the course to remove:");
-                        int.TryParse(Console.ReadLine(), out int id); // Enter the id of the course to exclude
+                        userInterface.DisplayRemoveCourseById();
+                        int id = userEntry.GetEnteredId();
                         serviceCourse.DeleteCourse(id);
-                        serviceCourse.FindCourseById(id);
 
-                        menuChoice = userInterface.DisplayBackToMainMenu();
+                        menuChoice = userEntry.GetBackToMainMenu();
                         if (menuChoice == 0) break;
                     }
                     else
                     {
-                        Console.WriteLine("Invalid number. Try again.");
+                        userInterface.DisplayInvalidNumber();
                     }
                 }
-
             }
             else
             {
-                Console.WriteLine("Invalid number. Try again.");
+                userInterface.DisplayInvalidNumber();
             }
+
+            FileHandler.Serialize(dataApp);
         }
      }
 }
