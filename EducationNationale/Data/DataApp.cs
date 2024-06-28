@@ -1,9 +1,3 @@
-using System;
-using System.Collections.Generic;
-using System.Data.Common;
-using System.Linq;
-using System.Threading.Tasks;
-using Newtonsoft.Json;
 
 namespace EducationNationale
 {
@@ -20,7 +14,8 @@ namespace EducationNationale
 
         // empty constructor
         public DataApp () {
-        }
+            Courses = new List<Course>();
+            Students = new List<Student>();
+         }
     }
-
 }

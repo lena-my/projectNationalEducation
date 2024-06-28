@@ -40,9 +40,9 @@ namespace EducationNationale.Business
         }
 
         // Get Course By Id
-        public Course FindCourseById (int id)
+        public Course? FindCourseById (int id)
         {
-            Course courseToFind = new Course();
+            Course courseToFind = null;
             if (Courses != null)
             {
                 foreach (Course course in Courses)

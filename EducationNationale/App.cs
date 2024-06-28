@@ -17,12 +17,16 @@ namespace EducationNationale
             ServiceStudent = serviceStudent;
         }
 
-        public int IdGenerator()
+        public int IdGeneratorCourse()
         {
-            int id = ServiceCourse.Courses[^1].Id + 1;
+            int id = ServiceCourse.Courses.Max(x=> x.Id) + 1;
             return id;
         }
-        
+        public int IdGeneratorStudent()
+        {
+            int id = ServiceStudent.Students.Max(x=> x.Id) + 1;
+            return id;
+        }
         public void DisplayStudents(){
             Console.WriteLine("List of students");
             Console.WriteLine("----------------------------------------------------------------------");
@@ -35,20 +39,18 @@ namespace EducationNationale
         {
             Console.WriteLine("Add new student");
 
-            Student student = new Student();
             Console.WriteLine("Name :");
-            student.Name = Console.ReadLine();
+            var name = Console.ReadLine();
             
             Console.WriteLine("Surname:");
-            student.Surname = Console.ReadLine();
+            var surname = Console.ReadLine();
 
             Console.WriteLine("Birthday (dd/mm/yyyy):");
             string bithdayInput = Console.ReadLine();
             string format = "dd/MM/yyyy";
             DateTime.TryParseExact(bithdayInput, format, System.Globalization.CultureInfo.InvariantCulture, DateTimeStyles.None, out DateTime birthday);
-            student.Birthday = birthday;
             
-            return student;
+            return new Student(IdGeneratorStudent(),name,surname,birthday);
         }
 
         public Course? GetCourseToCreate()
@@ -61,7 +63,7 @@ namespace EducationNationale
                 return null;
             }
 
-            return new Course(courseString,IdGenerator());
+            return new Course(IdGeneratorCourse(),courseString);
         }
     }
 }

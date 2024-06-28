@@ -27,20 +27,19 @@ namespace EducationNationale
 
         public void DisplayMenuStudents()
         {
-            Console.WriteLine("MENU STUDENT");
-            Console.WriteLine("Choose an option:");
+            Console.WriteLine("MENU STUDENT\n");
+            Console.WriteLine("Choose an option:\n");
             Console.WriteLine("0 - Back to the main menu");
             Console.WriteLine("1 - List of students");
             Console.WriteLine("2 - Add a new student");
             Console.WriteLine("3 - Find a student");
             Console.WriteLine("4 - Add a grade and an assessment to a student");
-            // _app.DisplayStudent();
         }
 
         public void DisplayCourseMenu()
         {
-            Console.WriteLine("MENU COURSE");
-            Console.WriteLine("Choose an option:");
+            Console.WriteLine("MENU COURSE\n");
+            Console.WriteLine("Choose an option:\n");
             Console.WriteLine("0 - Back to the main menu");
             Console.WriteLine("1 - List of courses");
             Console.WriteLine("2 - Find course by id");
@@ -50,9 +49,8 @@ namespace EducationNationale
 
         public void DisplayStudents()
         {
-            Console.WriteLine("List of students");
-
-            Console.WriteLine("----------------------------------------------------------------------");
+            Console.WriteLine("LIST OF STUDENTS\n");
+            Console.WriteLine("----------------------------------------------------------------------\n");
             Console.WriteLine("Student's information : \n");
             Console.WriteLine($"Name              : ");
             Console.WriteLine($"Surname           : ");
