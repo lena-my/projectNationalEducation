@@ -9,17 +9,14 @@ namespace EducationNationale
     {
         private App _app;
 
-        public UserInterface(App app){
+        public UserInterface(App app)
+        {
             _app = app;
         }
 
-        public UserInterface() {}
+        public UserInterface() { }
 
-        public int ChooseMenu()
-        {
-            int.TryParse(Console.ReadLine(), out int menuChoice);
-            return menuChoice;
-        }
+
         public void DisplayMainMenu()
         {
             Console.WriteLine("MAIN MENU");
@@ -51,18 +48,10 @@ namespace EducationNationale
             Console.WriteLine("4 - Exclude a course by id");
         }
 
-        public int DisplayBackToMainMenu()
-        {
-            //Console.WriteLine("0 - Back to main menu");
-            int.TryParse(Console.ReadLine(), out int MenuChoice);
-                        
-            return MenuChoice;
-        }
-
         public void DisplayStudents()
         {
-            Console.WriteLine("List of students");            
-            
+            Console.WriteLine("List of students");
+
             Console.WriteLine("----------------------------------------------------------------------");
             Console.WriteLine("Student's information : \n");
             Console.WriteLine($"Name              : ");
@@ -76,7 +65,28 @@ namespace EducationNationale
             Console.WriteLine("----------------------------------------------------------------------");
         }
 
+        public void DisplayInvalidNumber()
+        {
+            Console.WriteLine("Invalid number. Try again.");
+        }
 
+        public void DisplayRemoveCourseById()
+        {
+            Console.WriteLine("Remove a course by id");
+            Console.WriteLine("Enter the id of the course to remove:");
+        }
+
+        public void DisplayGetCourseById()
+        {
+            Console.WriteLine("----------------------------------------------------------------------");
+            Console.WriteLine("Find course by id");
+            Console.WriteLine("Enter the id of the course to find:");
+        }
+
+        public void DisplayBackToMainMenu()
+        {
+            Console.WriteLine("\n0 - Back to the main menu");
+        }
 
     }
 }
