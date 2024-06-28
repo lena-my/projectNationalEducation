@@ -10,7 +10,7 @@ namespace EducationNationale
     {
         private const string JSON_PATH = "./bin/Debug/net8.0/data.json";
 
-        public static DataApp? Deserialize() // DataApp can be null
+        public static DataApp? Deserialize() // DataApp can be null, Converts to an Object
         {
             try
             {
@@ -22,18 +22,17 @@ namespace EducationNationale
             
             string jsonString = File.ReadAllText(JSON_PATH); // Read JSON file
             DataApp? dataApp = JsonConvert.DeserializeObject<DataApp>(jsonString); // Deserialize the JSON string to an instance of DataApp
-
             return dataApp;
             }
             catch (System.Exception e)
             {
-                Console.WriteLine("ERREUR DESERIALIZE :: " + e.Message);
+                Console.WriteLine("ERROR DESERIALIZE :: " + e.Message);
                 return null;
             }
             
 
         }
-        public static  bool Serialize(DataApp dataApp)
+        public static  bool Serialize(DataApp dataApp) // Converts to json
         {
             try
             {
