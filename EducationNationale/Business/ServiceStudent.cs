@@ -43,7 +43,8 @@ namespace EducationNationale.Business
             Console.WriteLine("Student's information : \n");
             Console.WriteLine($"Name              : {student.Name}");
             Console.WriteLine($"Surname           : {student.Surname}");
-            Console.WriteLine($"Birthday : {student.Birthday}\n\n");
+            string formattedBirthday = student.Birthday.ToString("dd/MM/yyyy");
+            Console.WriteLine($"Birthday : {formattedBirthday}\n\n");
 
             if (student.Grades is not null && student.Grades.Count > 0)
             {

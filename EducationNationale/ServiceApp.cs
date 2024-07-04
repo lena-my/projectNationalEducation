@@ -46,10 +46,9 @@ namespace EducationNationale
             var surname = Console.ReadLine();
 
             Console.WriteLine("Birthday (dd/mm/yyyy):");
-            string bithdayInput = Console.ReadLine();
+            string birthdayInput = Console.ReadLine();
             string format = "dd/MM/yyyy";
-            DateTime.TryParseExact(bithdayInput, format, System.Globalization.CultureInfo.InvariantCulture, DateTimeStyles.None, out DateTime birthday);
-            
+            DateOnly.TryParseExact(birthdayInput, format, CultureInfo.InvariantCulture, DateTimeStyles.None, out DateOnly birthday);
             return new Student(IdGeneratorStudent(), name, surname, birthday);
         }
 

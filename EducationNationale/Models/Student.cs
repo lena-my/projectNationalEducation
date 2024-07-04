@@ -6,10 +6,10 @@ namespace EducationNationale
         public int Id { get; }
         public string Name { get; }
         public string Surname { get; }
-        public DateTime Birthday { get; } // (yyyy, mm, dd)
+        public DateOnly Birthday { get; } // (yyyy, mm, dd)
         public List<Grade> Grades { get; }
 
-        public Student(int id, string name, string surname, DateTime birthday)
+        public Student(int id, string name, string surname, DateOnly birthday)
         {
             Id = id;
             Name = name;
