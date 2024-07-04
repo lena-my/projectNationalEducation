@@ -48,10 +48,10 @@ namespace EducationNationale
                         // Find a student by id
                         else if (menuChoice == 3)
                         {
-                            userInterface.DisplayGetStudentById();
-                            int idStudentToFind = userEntry.GetEnteredId();
-                            Student studentToFind = _serviceApp.FindStudentById(idStudentToFind);
-                            _serviceApp.DisplayStudentById(studentToFind);
+                            userInterface.DisplayGetStudentById(); // displays text to get the student id
+                            int idStudentToFind = userEntry.GetEnteredId(); // method to enter the student id
+                            Student studentToFind = _serviceApp.FindStudentById(idStudentToFind); // defines student to find
+                            _serviceApp.DisplayStudentById(studentToFind); // displays the student found
 
                             // Add a grade and an assessment to a student
                             userInterface.DisplayGetGrades();
@@ -68,7 +68,7 @@ namespace EducationNationale
                                 Console.WriteLine("Enter the id of the course to add grades:");
                                 int idCourseToFind = userEntry.GetEnteredId();
                                 Course courseToFind = _serviceApp.FindCourseById(idCourseToFind); // calls the method FindCourseById
-   
+
                                 Console.WriteLine("Enter the grade:");
                                 double gradeValue = (double)userEntry.GetEnteredValueGrade();
                                 Console.WriteLine("Enter an observation:");
