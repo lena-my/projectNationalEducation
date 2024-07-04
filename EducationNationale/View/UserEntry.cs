@@ -19,14 +19,25 @@ namespace EducationNationale.View
 
         public double? GetEnteredValueGrade()
         {
-            string input = Console.ReadLine();
-            if (double.TryParse(input, out double grade))
+            while (true)
             {
-                return grade;
-            }
-            else
-            {
-                return null;
+                string input = Console.ReadLine();
+                if (double.TryParse(input, out double grade))
+                {
+                    if (grade >= 0 && grade <= 20)
+                    {
+                        return grade;
+                    }
+                    else
+                    {
+                        Console.WriteLine("Invalid grade. Grade must be between 0 and 20.");
+                    }
+                }
+                else
+                {
+                    Console.WriteLine("Invalid number. Enter a valid number between 0 and 20.");
+                    return null;
+                }
             }
         }
 
@@ -36,7 +47,7 @@ namespace EducationNationale.View
             return observation;
         }
 
-        public Grade GetGradeToAdd (int idStudent, int idCourse)
+        public Grade GetGradeToAdd(int idStudent, int idCourse)
         {
             double gradeValue = (double)GetEnteredValueGrade();
             string? observation = GetEnteredObservation();

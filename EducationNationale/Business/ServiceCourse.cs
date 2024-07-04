@@ -8,6 +8,7 @@ namespace EducationNationale.Business
 {
     public class ServiceCourse
     {
+        private readonly Log Logger = new Log();
         public List<Course> Courses;
 
         public ServiceCourse(List<Course> courses)
@@ -24,6 +25,7 @@ namespace EducationNationale.Business
             }
 
             Courses.Add(course); // Add the new course to the list
+            Logger.LogAction($"Course id {course.Id}, name: {course.Name} added");
         }
 
         // method to display all courses
@@ -51,11 +53,11 @@ namespace EducationNationale.Business
                     {
                         courseToFind = course;
                         break;
-                    }
-                    else
-                    {
-                        Console.WriteLine("Course not found.");
-                    }
+                    }  
+                }
+                if (courseToFind == null) 
+                {
+                    Console.WriteLine("Course not found.");
                 }
             }
             return courseToFind;

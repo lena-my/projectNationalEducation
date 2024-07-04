@@ -44,7 +44,7 @@ namespace EducationNationale.Business
             Console.WriteLine($"Name              : {student.Name}");
             Console.WriteLine($"Surname           : {student.Surname}");
             string formattedBirthday = student.Birthday.ToString("dd/MM/yyyy");
-            Console.WriteLine($"Birthday : {formattedBirthday}\n\n");
+            Console.WriteLine($"Birthday          : {formattedBirthday}\n\n");
 
             if (student.Grades is not null && student.Grades.Count > 0)
             {
@@ -60,13 +60,14 @@ namespace EducationNationale.Business
                 Console.WriteLine($"Average : {average}");
             }
 
+            Console.WriteLine("\n----------------------------------------------------------------------\n");
         }
         // Method to display grades according to the course and the student
         public void DisplayGrade(Grade grade, Course courseOfGrade, double average)
         {
             Console.WriteLine($"   Course : {courseOfGrade.Name}");
-            Console.WriteLine($"      Grade       : {grade.Value}");
-            Console.WriteLine($"      Observation : {grade.Observation}\n");
+            Console.WriteLine($"        Grade       : {grade.Value}");
+            Console.WriteLine($"        Observation : {grade.Observation}\n");
         }
 
         public void CreateStudent(Student student)
@@ -95,10 +96,11 @@ namespace EducationNationale.Business
                     studentToFind = student;
                     break;
                 }
-                else
-                {
-                    Console.WriteLine("Student not found.");
-                }
+            }
+
+            if (studentToFind == null)
+            {
+                Console.WriteLine("Student not found.");
             }
 
             return studentToFind;
