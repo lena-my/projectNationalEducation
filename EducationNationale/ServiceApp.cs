@@ -22,10 +22,11 @@ namespace EducationNationale
             return ServiceStudent.Students.Max(x=> x.Id) + 1;
         }
 
-        public bool Save(){
-
+        public bool Save()
+        {
             return FileHandler.Serialize(new DataApp(ServiceCourse.Courses,ServiceStudent.Students));
         }
+
         public void DisplayStudents(){
             Console.WriteLine("List of students");
             Console.WriteLine("----------------------------------------------------------------------");
@@ -34,7 +35,7 @@ namespace EducationNationale
         }
         
          // method create new student
-        public Student CreateStudent ()
+        public Student GetStudentToCreate ()
         {
             Console.WriteLine("Add new student");
 
@@ -49,7 +50,7 @@ namespace EducationNationale
             string format = "dd/MM/yyyy";
             DateTime.TryParseExact(bithdayInput, format, System.Globalization.CultureInfo.InvariantCulture, DateTimeStyles.None, out DateTime birthday);
             
-            return new Student(IdGeneratorStudent(),name,surname,birthday);
+            return new Student(IdGeneratorStudent(), name, surname, birthday);
         }
 
         public Course? GetCourseToCreate()
@@ -75,13 +76,56 @@ namespace EducationNationale
             Save();
         }
 
-        public Course FindCourseById(int Id){
-            return ServiceCourse.FindCourseById(Id);
+        public Course FindCourseById(int id){
+            return ServiceCourse.FindCourseById(id);
         }
 
-        public void DeleteCourse(int Id){
-            ServiceCourse.DeleteCourse(Id);
+        public void DeleteCourse(int id){
+            ServiceCourse.DeleteCourse(id);
             Save();
+        }
+
+        public void CreateStudent(Student student)
+        {
+            try {
+                ServiceStudent.CreateStudent(student);
+                Save();
+            }
+            catch (System.Exception e)
+            {
+                Console.WriteLine($"Student not created. ERROR: {e.Message}");
+            }
+            
+        }
+
+        public Student FindStudentById (int id)
+        {
+            return ServiceStudent.FindStudentById(id);
+        }
+
+        public void DeleteStudent(int id)
+        {
+            ServiceStudent.DeleteStudent(id);
+            Save();
+        }
+
+        public void DisplayStudentById(Student studentToFind)
+        {
+            ServiceStudent.DisplayStudent(studentToFind, ServiceCourse.Courses);
+        }
+
+        public void AddGradeToStudent(Student student, Grade grade)
+        {
+            try
+            {
+                ServiceStudent.AddGrade(student, grade);
+                Save();
+            }
+            catch (System.Exception e)
+            {
+                Console.WriteLine($"Grade not added. ERROR: {e.Message}");
+            }
+            
         }
     }
 }

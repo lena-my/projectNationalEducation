@@ -1,4 +1,6 @@
 
+using System.ComponentModel.DataAnnotations;
+
 namespace EducationNationale.View
 {
     public class UserEntry
@@ -15,13 +17,33 @@ namespace EducationNationale.View
             return menuChoice;
         }
 
-        public int GetBackToMainMenu()
+        public double? GetEnteredValueGrade()
         {
-            //Console.WriteLine("0 - Back to main menu");
-            int.TryParse(Console.ReadLine(), out int MenuChoice);
-
-            return MenuChoice;
+            string input = Console.ReadLine();
+            if (double.TryParse(input, out double grade))
+            {
+                return grade;
+            }
+            else
+            {
+                return null;
+            }
         }
-        
+
+        public string? GetEnteredObservation()
+        {
+            string observation = Console.ReadLine();
+            return observation;
+        }
+
+        public Grade GetGradeToAdd (int idStudent, int idCourse)
+        {
+            double gradeValue = (double)GetEnteredValueGrade();
+            string? observation = GetEnteredObservation();
+            Grade gradeToAdd = new Grade(idCourse, idStudent, gradeValue, observation);
+
+            return gradeToAdd;
+        }
+
     }
 }

@@ -33,7 +33,6 @@ namespace EducationNationale
             Console.WriteLine("1 - List of students");
             Console.WriteLine("2 - Add a new student");
             Console.WriteLine("3 - Find a student");
-            Console.WriteLine("4 - Add a grade and an assessment to a student");
         }
 
         public void DisplayCourseMenu()
@@ -84,6 +83,20 @@ namespace EducationNationale
         public void DisplayBackToMainMenu()
         {
             Console.WriteLine("\n0 - Back to the main menu");
+        }
+
+        public void DisplayGetStudentById()
+        {
+            Console.WriteLine("----------------------------------------------------------------------");
+            Console.WriteLine("Find student by id");
+            Console.WriteLine("Enter the id of the student to find:");
+        }
+
+        public void DisplayGetGrades()
+        {
+            Console.WriteLine("Add a grade and an assessment to the student");
+            Console.WriteLine("0 - Back to previous menu");
+            Console.WriteLine("1 - Add grades");
         }
 
     }

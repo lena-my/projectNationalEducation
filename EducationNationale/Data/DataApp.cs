@@ -1,6 +1,7 @@
 
 namespace EducationNationale
 {
+    // class used to define the types to FileHandler (that converts json files)
     public class DataApp
     {
         public List <Course> Courses { get; set; }
@@ -12,10 +13,5 @@ namespace EducationNationale
             Students = students;
         }
 
-        // empty constructor
-        public DataApp () {
-            Courses = new List<Course>();
-            Students = new List<Student>();
-         }
     }
 }

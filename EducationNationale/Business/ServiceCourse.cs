@@ -64,13 +64,9 @@ namespace EducationNationale.Business
         // Delete course by Id
         public void DeleteCourse(int id)
         {
-            
-            Console.WriteLine($"The course with id {id} was deleted successfully.");
-            // }
-            // else
-            // {
-            //     Console.WriteLine($"Course with id {id} not found.");
-            // }
+            Course? courseToRemove = FindCourseById(id);
+            Courses.Remove(courseToRemove);
+            Console.WriteLine($"The course with id {id} was removed successfully.");
         }
     }
 }
