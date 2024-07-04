@@ -126,8 +126,17 @@ namespace EducationNationale
 
         public void CreateCourse(Course course)
         {
-            ServiceCourse.CreateCourse(course);
-            Save();
+            try
+            {
+               ServiceCourse.CreateCourse(course);
+                Save();
+                Console.WriteLine($"id: {course.Id}, name: {course.Name} created successfully."); 
+            }
+            catch (System.Exception e)
+            {
+                Console.WriteLine($"Course not created. ERROR: {e.Message}");
+            }
+            
         }
 
         public Course FindCourseById(int id)
@@ -147,7 +156,7 @@ namespace EducationNationale
             {
                 ServiceStudent.CreateStudent(student);
                 Save();
-                Console.WriteLine($"{student.Name} {student.Surname}, birthday: {student.Birthday} creates successfully.");
+                Console.WriteLine($"{student.Name} {student.Surname}, birthday: {student.Birthday} created successfully.");
             }
             catch (System.Exception e)
             {
@@ -163,9 +172,16 @@ namespace EducationNationale
 
         public void DeleteStudent(int id)
         {
-            ServiceStudent.DeleteStudent(id);
-            Save();
-            Console.WriteLine($"Student with id {id} was removed successfully.");
+            try{
+                ServiceStudent.DeleteStudent(id);
+                Save();
+                Console.WriteLine($"Student with id {id} was removed successfully.");
+            }
+            catch (System.Exception e)
+            {
+                Console.WriteLine($"Student not deleted. ERROR: {e.Message}");
+            }
+
         }
 
         public void DisplayStudentById(Student studentToFind)
@@ -185,7 +201,6 @@ namespace EducationNationale
             {
                 Console.WriteLine($"Grade not added. ERROR: {e.Message}");
             }
-
         }
     }
 }

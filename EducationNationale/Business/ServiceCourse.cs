@@ -25,7 +25,7 @@ namespace EducationNationale.Business
             }
 
             Courses.Add(course); // Add the new course to the list
-            Logger.LogAction($"Course id {course.Id}, name: {course.Name} added");
+            Logger.LogAction($"Creation of new Course id: {course.Id}, name: {course.Name}."); // creates log
         }
 
         // method to display all courses
@@ -38,6 +38,7 @@ namespace EducationNationale.Business
                     Console.WriteLine($"Id     : {course.Id}");
                     Console.WriteLine($"Course : {course.Name}\n");
                 }
+                Logger.LogAction($"Display of all courses."); // creates log
             }
         }
 
@@ -60,6 +61,7 @@ namespace EducationNationale.Business
                     Console.WriteLine("Course not found.");
                 }
             }
+            Logger.LogAction($"Search course by id {id}."); // creates log
             return courseToFind;
         }
 
@@ -68,7 +70,8 @@ namespace EducationNationale.Business
         {
             Course? courseToRemove = FindCourseById(id);
             Courses.Remove(courseToRemove);
-            Console.WriteLine($"The course with id {id} was removed successfully.");
+            Logger.LogAction($"Removed Course {courseToRemove.Name}, id {id}."); // creates log
+            Console.WriteLine($"The course {courseToRemove.Name} with id {id} was removed successfully.");
         }
     }
 }

@@ -8,6 +8,7 @@ namespace EducationNationale.Business
 {
     public class ServiceStudent
     {
+        private readonly Log Logger = new Log();
         public List<Student> Students;
 
         public ServiceStudent(List<Student> students)
@@ -35,6 +36,7 @@ namespace EducationNationale.Business
             {
                 DisplayStudent(student, courses);
             }
+            Logger.LogAction($"Display of all courses."); // creates log
         }
 
         // method to display a students
@@ -78,11 +80,13 @@ namespace EducationNationale.Business
             }
 
             Students.Add(student);
+            Logger.LogAction($"Creation of new Student id: {student.Id}, name: {student.Name} surname: {student.Surname}, birthday: {student.Birthday}."); // creates log
         }
 
         public void AddGrade(Student student, Grade grade)
         {
             student.Grades.Add(grade);
+            Logger.LogAction($"Creation of new Grade CourseId: {grade.CourseId}, StudentId: {grade.StudentId}, Value: {grade.Value}, Observation: {grade.Observation}."); // creates log
         }
 
         // Find student by id
@@ -102,7 +106,7 @@ namespace EducationNationale.Business
             {
                 Console.WriteLine("Student not found.");
             }
-
+            Logger.LogAction($"Search student by id {id}."); // creates log
             return studentToFind;
         }
 
@@ -112,6 +116,7 @@ namespace EducationNationale.Business
             Student? studentToRemove = FindStudentById(id);
             Students.Remove(studentToRemove);
             Console.WriteLine($"The student with id {id} was removed successfully.");
+            Logger.LogAction($"Removed Student name: {studentToRemove.Name}, id {id}."); // creates log
         }
     }
 }
