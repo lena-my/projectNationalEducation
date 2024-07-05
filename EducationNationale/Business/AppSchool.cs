@@ -113,6 +113,8 @@ namespace EducationNationale
                         {
                             userInterface.DisplayGetCourseById();
                             Course courseToFind = _serviceApp.FindCourseById(userEntry.GetEnteredId()); // calls the method FindCourseById
+                            if (courseToFind is null) break;
+                            
                             Console.WriteLine($"Code course : {courseToFind.Id}    Course : {courseToFind.Name}\n");
                         }
 
