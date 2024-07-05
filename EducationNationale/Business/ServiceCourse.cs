@@ -8,7 +8,6 @@ namespace EducationNationale.Business
 {
     public class ServiceCourse
     {
-        private readonly Log Logger = new Log();
         public List<Course> Courses;
 
         public ServiceCourse(List<Course> courses)
@@ -25,7 +24,6 @@ namespace EducationNationale.Business
             }
 
             Courses.Add(course); // Add the new course to the list
-            Logger.LogAction($"Creation of new Course id: {course.Id}, name: {course.Name}."); // creates log
         }
 
         // method to display all courses
@@ -38,7 +36,6 @@ namespace EducationNationale.Business
                     Console.WriteLine($"Id     : {course.Id}");
                     Console.WriteLine($"Course : {course.Name}\n");
                 }
-                Logger.LogAction($"Display of all courses."); // creates log
             }
         }
 
@@ -61,17 +58,16 @@ namespace EducationNationale.Business
                     Console.WriteLine("Course not found.");
                 }
             }
-            Logger.LogAction($"Search course by id {id}."); // creates log
             return courseToFind;
         }
 
         // Delete course by Id
-        public void DeleteCourse(int id)
+        public Course DeleteCourse(int id)
         {
             Course? courseToRemove = FindCourseById(id);
             Courses.Remove(courseToRemove);
-            Logger.LogAction($"Removed Course {courseToRemove.Name}, id {id}."); // creates log
             Console.WriteLine($"The course {courseToRemove.Name} with id {id} was removed successfully.");
+            return courseToRemove;
         }
     }
 }

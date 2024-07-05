@@ -36,7 +36,6 @@ namespace EducationNationale
                         // List of students
                         else if (menuChoice == 1)
                         {
-                            userInterface.DisplayStudents();
                             _serviceApp.DisplayStudents();
                         }
                         // Add new student
@@ -51,16 +50,16 @@ namespace EducationNationale
                             userInterface.DisplayGetStudentById(); // displays text to get the student id
                             int idStudentToFind = userEntry.GetEnteredId(); // method to enter the student id
                             Student studentToFind = _serviceApp.FindStudentById(idStudentToFind); // defines student to find
+                            if (studentToFind is null) continue;
+
                             _serviceApp.DisplayStudentById(studentToFind); // displays the student found
 
                             // Add a grade and an assessment to a student
                             userInterface.DisplayGetGrades();
                             menuChoice = userEntry.GetMenuChoice();
 
-                            if (menuChoice == 0) 
-                            {
-                                break;
-                            }
+                            if (menuChoice == 0) break;
+    
                             else if (menuChoice == 1)
                             {
                                 Console.WriteLine("\nLIST OF COURSES \n");
