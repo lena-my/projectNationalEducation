@@ -3,12 +3,12 @@ using System.Collections.Generic;
 using System.Globalization;
 using System.Linq;
 using System.Threading.Tasks;
+using Serilog;
 
 namespace EducationNationale.Business
 {
     public class ServiceStudent
     {
-        private readonly Log Logger = new Log();
         public List<Student> Students;
 
         public ServiceStudent(List<Student> students)
@@ -23,7 +23,7 @@ namespace EducationNationale.Business
 
             foreach (var grade in student.Grades)
             {
-                sum =+ grade.Value;
+                sum = +grade.Value;
             }
 
             return sum / student.Grades.Count(); // average
@@ -36,7 +36,8 @@ namespace EducationNationale.Business
             {
                 DisplayStudent(student, courses);
             }
-            Logger.LogAction($"Display of all courses."); // creates log
+
+            Log.Information("Displayed list of students.");
         }
 
         // method to display a students
@@ -54,7 +55,14 @@ namespace EducationNationale.Business
 
                 foreach (var grade in student.Grades)
                 {
-                    Course specificCourseOfGrade = courses.First(item => item.Id == grade.CourseId);
+                    Course specificCourseOfGrade = courses.FirstOrDefault(item => item.Id == grade.CourseId);
+
+                    if (specificCourseOfGrade is null)
+                    {
+                        Log.Error($"No matching id between idStudent {student.Id}  and Grade {grade.Value} and CourseId {grade.CourseId}");
+                        break;
+                    }
+
                     DisplayGrade(grade, specificCourseOfGrade, 0);
                 }
 
@@ -80,33 +88,23 @@ namespace EducationNationale.Business
             }
 
             Students.Add(student);
-            Logger.LogAction($"Creation of new Student id: {student.Id}, name: {student.Name} surname: {student.Surname}, birthday: {student.Birthday}."); // creates log
         }
 
         public void AddGrade(Student student, Grade grade)
         {
             student.Grades.Add(grade);
-            Logger.LogAction($"Creation of new Grade CourseId: {grade.CourseId}, StudentId: {grade.StudentId}, Value: {grade.Value}, Observation: {grade.Observation}."); // creates log
         }
 
         // Find student by id
         public Student? FindStudentById(int id)
         {
-            Student studentToFind = null;
-            foreach (Student student in Students)
-            {
-                if (id == student.Id)
-                {
-                    studentToFind = student;
-                    break;
-                }
-            }
+            Student? studentToFind = Students.FirstOrDefault(student => student.Id == id);
 
             if (studentToFind == null)
             {
-                Console.WriteLine("Student not found.");
+                Console.WriteLine("Student not found. Try another id.");
             }
-            Logger.LogAction($"Search student by id {id}."); // creates log
+
             return studentToFind;
         }
 
@@ -116,7 +114,11 @@ namespace EducationNationale.Business
             Student? studentToRemove = FindStudentById(id);
             Students.Remove(studentToRemove);
             Console.WriteLine($"The student with id {id} was removed successfully.");
-            Logger.LogAction($"Removed Student name: {studentToRemove.Name}, id {id}."); // creates log
+        }
+
+        public void DeleteStudentGrade(Course deletedCourse)
+        {
+            Students.ForEach(x => x.Grades.RemoveAll(y => y.CourseId == deletedCourse.Id));
         }
     }
 }

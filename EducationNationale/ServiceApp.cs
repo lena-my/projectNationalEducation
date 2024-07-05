@@ -1,6 +1,7 @@
 using System.Globalization;
 using System.Text.RegularExpressions;
 using EducationNationale.Business;
+using Serilog;
 
 namespace EducationNationale
 {
@@ -66,7 +67,6 @@ namespace EducationNationale
                 }
             }
 
-
             // loop to enter the correct surname
             while (true)
             {
@@ -106,7 +106,6 @@ namespace EducationNationale
 
         public Course? GetCourseToCreate()
         {
-
             Console.WriteLine("Add new course");
             Console.WriteLine("Enter the name of a course:");
             string courseString = Console.ReadLine();
@@ -122,85 +121,65 @@ namespace EducationNationale
         public void DisplayAllCourses()
         {
             ServiceCourse.DisplayAllCourses();
+            Log.Information("Displayed list of all courses.");
         }
 
         public void CreateCourse(Course course)
         {
-            try
-            {
                ServiceCourse.CreateCourse(course);
                 Save();
-                Console.WriteLine($"id: {course.Id}, name: {course.Name} created successfully."); 
-            }
-            catch (System.Exception e)
-            {
-                Console.WriteLine($"Course not created. ERROR: {e.Message}");
-            }
-            
+                Console.WriteLine($"id: {course.Id}, name: {course.Name} created successfully.");  
+                Log.Information($"Created course id: {course.Id}, name: {course.Name}.");           
         }
 
         public Course FindCourseById(int id)
         {
+            Log.Information($"Found course by id {id}.");
             return ServiceCourse.FindCourseById(id);
-        }
-
-        public void DeleteCourse(int id)
-        {
-            ServiceCourse.DeleteCourse(id);
-            Save();
         }
 
         public void CreateStudent(Student student)
         {
-            try
-            {
                 ServiceStudent.CreateStudent(student);
                 Save();
                 Console.WriteLine($"{student.Name} {student.Surname}, birthday: {student.Birthday} created successfully.");
-            }
-            catch (System.Exception e)
-            {
-                Console.WriteLine($"Student not created. ERROR: {e.Message}");
-            }
-
+                Log.Information($"Creation of new student {student.Name} {student.Surname}, birthday: {student.Birthday}");
         }
 
         public Student FindStudentById(int id)
         {
+            Log.Information($"Search student by id {id}.");
             return ServiceStudent.FindStudentById(id);
         }
 
         public void DeleteStudent(int id)
         {
-            try{
                 ServiceStudent.DeleteStudent(id);
                 Save();
                 Console.WriteLine($"Student with id {id} was removed successfully.");
-            }
-            catch (System.Exception e)
-            {
-                Console.WriteLine($"Student not deleted. ERROR: {e.Message}");
-            }
-
+                Log.Information($"Removed student with id {id}");
         }
 
         public void DisplayStudentById(Student studentToFind)
         {
             ServiceStudent.DisplayStudent(studentToFind, ServiceCourse.Courses);
+            Log.Information($"Displayed student {studentToFind.Name} {studentToFind.Surname}, birthday {studentToFind.Birthday}, id {studentToFind.Id}");
         }
 
         public void AddGradeToStudent(Student student, Grade grade)
         {
-            try
-            {
                 ServiceStudent.AddGrade(student, grade);
                 Save();
                 Console.WriteLine($"Grade {grade.Value} added to the course id {grade.CourseId} successfully.");
-            }
-            catch (System.Exception e)
-            {
-                Console.WriteLine($"Grade not added. ERROR: {e.Message}");
-            }
+                Log.Information($"Added grade {grade.Value}  to the course id {grade.CourseId} to student {student.Name} {student.Surname}, ");
+        }
+
+        public void DeleteCourse(int id)
+        {
+            Course deletedCourse = ServiceCourse.DeleteCourse(id);
+            ServiceStudent.DeleteStudentGrade(deletedCourse);
+            Save();
+            Log.Information($"Deleted course {deletedCourse.Name}, id {deletedCourse.Id}.");
         }
     }
 }

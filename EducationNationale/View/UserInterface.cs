@@ -46,22 +46,6 @@ namespace EducationNationale
             Console.WriteLine("4 - Exclude a course by id");
         }
 
-        public void DisplayStudents()
-        {
-            Console.WriteLine("LIST OF STUDENTS\n");
-            Console.WriteLine("----------------------------------------------------------------------\n");
-            Console.WriteLine("Student's information : \n");
-            Console.WriteLine($"Name              : ");
-            Console.WriteLine($"Surname           : ");
-            Console.WriteLine($"Birthday : \n\n");
-            Console.WriteLine($"Results :\n");
-            Console.WriteLine($"   Course :");
-            Console.WriteLine($"      Grade       :");
-            Console.WriteLine($"      Observation : \n");
-            Console.WriteLine($"      Average     :\n");
-            Console.WriteLine("----------------------------------------------------------------------");
-        }
-
         public void DisplayInvalidNumber()
         {
             Console.WriteLine("Invalid number. Try again.");

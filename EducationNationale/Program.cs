@@ -1,11 +1,13 @@
 ﻿using EducationNationale;
 using EducationNationale.Business;
 using EducationNationale.View;
+using Serilog;
 
 public class Program
 {
     public static void Main()
     {
+            Logger.ConfigurationLogs();
             DataApp? dataApp = FileHandler.Deserialize(); // Converts the data.json to objects
             if (dataApp is null)
             {
@@ -17,7 +19,10 @@ public class Program
             ServiceApp app = new ServiceApp(serviceStudent, serviceCourse);
 
         AppSchool appSchool = new AppSchool(app);
+        
         appSchool.RunProgram();
+
+        Log.CloseAndFlush();
     }
 }
 
